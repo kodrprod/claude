@@ -128,7 +128,7 @@ public enum APEXKeyDerivation {
     public static func expandMessageKey(
         _ mk: APEXMessageKey,
         messageIndex: UInt64
-    ) -> (encKey: SymmetricKey, nonce: AES.GCM.Nonce) {
+    ) throws -> (encKey: SymmetricKey, nonce: AES.GCM.Nonce) {
         let mkBytes = mk.withUnsafeBytes { Data($0) }
         var indexBytes = messageIndex.bigEndian
         let indexData = Data(bytes: &indexBytes, count: 8)
@@ -142,10 +142,15 @@ public enum APEXKeyDerivation {
 
         let encKey = SymmetricKey(data: expanded.prefix(32))
         let nonceData = expanded.suffix(12)
-        // swiftlint:disable:next force_try
-        let nonce = try! AES.GCM.Nonce(data: nonceData)
-
-        return (encKey, nonce)
+        // Nonce is deterministically derived from the message key + index.
+        // This is safe because each message key in the Double Ratchet is used
+        // exactly once, guaranteeing unique (key, nonce) pairs per Signal spec.
+        do {
+            let nonce = try AES.GCM.Nonce(data: nonceData)
+            return (encKey, nonce)
+        } catch {
+            throw APEXError.keyDerivationFailed
+        }
     }
 
     // MARK: - Sealed Sender Key Derivation
@@ -173,7 +178,9 @@ public enum APEXKeyDerivation {
         pqSecret: Data
     ) -> Data {
         let combined = classicalSecret + pqSecret
-        let salt = Data(SHA512.hash(data: APEXConstants.hkdfInfoPQHybrid))
+        // Salt and info must be distinct to avoid HKDF domain conflation.
+        // Salt is a fixed hash of a dedicated salt label; info is the context label.
+        let salt = Data(SHA512.hash(data: APEXConstants.hkdfSaltPQHybrid))
         return hkdf(
             inputKeyMaterial: combined,
             salt: salt,

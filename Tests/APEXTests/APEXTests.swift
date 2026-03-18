@@ -489,7 +489,7 @@ final class APEXTests: XCTestCase {
             senderEphemeralKey: x3dhResult.ephemeralPublicKey
         )
 
-        let aliceRatchet = APEXDoubleRatchetState.forInitiator(
+        let aliceRatchet = try APEXDoubleRatchetState.forInitiator(
             sharedSecret: x3dhResult.sharedSecret,
             recipientRatchetKey: bobBundle.signedPreKey,
             associatedData: x3dhResult.associatedData

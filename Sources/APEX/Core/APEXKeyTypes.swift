@@ -110,6 +110,7 @@ public enum APEXConstants {
     public static let hkdfInfoMessageKey  = "APEX_v1_MessageKey".data(using: .utf8)!
     public static let hkdfInfoSealedSender = "APEX_v1_SealedSender".data(using: .utf8)!
     public static let hkdfInfoPQHybrid    = "APEX_v1_PQHybrid".data(using: .utf8)!
+    public static let hkdfSaltPQHybrid    = "APEX_v1_PQHybrid_Salt".data(using: .utf8)!
 
     /// Number of one-time pre-keys to generate per batch
     public static let oneTimePreKeyBatchSize = 100
