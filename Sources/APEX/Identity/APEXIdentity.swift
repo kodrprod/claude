@@ -166,8 +166,8 @@ public final class APEXIdentity: @unchecked Sendable {
     }
 
     /// Public one-time pre-keys (only public parts, for server upload)
-    public var publicOneTimePreKeys: [(id: UInt32, publicKey: Data)] {
-        oneTimePreKeys.map { (id: $0.key, publicKey: $0.value.publicKey.rawRepresentation) }
+    public var publicOneTimePreKeys: [(id: UInt32, publicKeyData: Data)] {
+        oneTimePreKeys.map { (id: $0.key, publicKeyData: $0.value.publicKey.rawRepresentation) }
     }
 
     // MARK: - Identity Fingerprint
