@@ -16,6 +16,7 @@
 //  12. Key rotation (signed pre-key)
 
 import XCTest
+import CryptoKit
 @testable import APEX
 
 final class APEXTests: XCTestCase {
@@ -87,7 +88,6 @@ final class APEXTests: XCTestCase {
     }
 
     func testRootChainKDF() {
-        import CryptoKit
         let rk = SymmetricKey(size: .bits256)
         let dhOut = Data(repeating: 0xAB, count: 32)
         let (newRK, ck) = APEXKeyDerivation.kdfRootChain(rootKey: rk, dhOutput: dhOut)
@@ -489,7 +489,7 @@ final class APEXTests: XCTestCase {
             senderEphemeralKey: x3dhResult.ephemeralPublicKey
         )
 
-        let aliceRatchet = APEXDoubleRatchetState.forInitiator(
+        let aliceRatchet = try APEXDoubleRatchetState.forInitiator(
             sharedSecret: x3dhResult.sharedSecret,
             recipientRatchetKey: bobBundle.signedPreKey,
             associatedData: x3dhResult.associatedData

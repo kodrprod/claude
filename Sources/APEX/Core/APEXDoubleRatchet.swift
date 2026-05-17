@@ -102,7 +102,7 @@ public final class APEXDoubleRatchetState: @unchecked Sendable {
         sharedSecret: Data,
         recipientRatchetKey: APEXDHPublicKey,
         associatedData: Data
-    ) -> APEXDoubleRatchetState {
+    ) throws -> APEXDoubleRatchetState {
         let rk = APEXKeyDerivation.deriveRootKey(fromX3DHSecret: sharedSecret)
         let dhPair = APEXDHKeyPair()
 
@@ -114,12 +114,16 @@ public final class APEXDoubleRatchetState: @unchecked Sendable {
         state.dhReceivingPublicKey = recipientRatchetKey
 
         // Immediately perform first DH ratchet to get Alice's sending chain
-        let dhOutput = try! dhPair.privateKey
-            .sharedSecretFromKeyAgreement(with: recipientRatchetKey)
-            .withUnsafeBytes { Data($0) }
-        let (newRK, ckS) = APEXKeyDerivation.kdfRootChain(rootKey: rk, dhOutput: dhOutput)
-        state.rootKey = newRK
-        state.sendingChainKey = ckS
+        do {
+            let dhOutput = try dhPair.privateKey
+                .sharedSecretFromKeyAgreement(with: recipientRatchetKey)
+                .withUnsafeBytes { Data($0) }
+            let (newRK, ckS) = APEXKeyDerivation.kdfRootChain(rootKey: rk, dhOutput: dhOutput)
+            state.rootKey = newRK
+            state.sendingChainKey = ckS
+        } catch {
+            throw APEXError.keyAgreementFailed
+        }
 
         return state
     }
@@ -174,7 +178,7 @@ public struct APEXDoubleRatchet {
         )
 
         // Derive per-message AES-GCM key + nonce from message key + index
-        let (encKey, nonce) = APEXKeyDerivation.expandMessageKey(
+        let (encKey, nonce) = try APEXKeyDerivation.expandMessageKey(
             messageKey,
             messageIndex: UInt64(state.sendingMessageIndex)
         )
@@ -353,7 +357,7 @@ public struct APEXDoubleRatchet {
         state: APEXDoubleRatchetState,
         additionalData: Data
     ) throws -> Data {
-        let (encKey, nonce) = APEXKeyDerivation.expandMessageKey(
+        let (encKey, nonce) = try APEXKeyDerivation.expandMessageKey(
             messageKey,
             messageIndex: UInt64(header.messageIndex)
         )

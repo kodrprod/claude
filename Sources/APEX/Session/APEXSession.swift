@@ -124,7 +124,7 @@ public final class APEXSession {
         )
 
         // 3. Initialize Double Ratchet state (initiator side)
-        let ratchet = APEXDoubleRatchetState.forInitiator(
+        let ratchet = try APEXDoubleRatchetState.forInitiator(
             sharedSecret: x3dhResult.sharedSecret,
             recipientRatchetKey: recipientBundle.signedPreKey,
             associatedData: x3dhResult.associatedData
