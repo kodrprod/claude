@@ -13,10 +13,10 @@ export const MAX_TEXT = 2000;
 export const MAX_NAME = 24;
 export const MAX_HISTORY = 200;
 
-// Fixed palette; HubCore hands out the least-used colour first.
+// Fixed palette (from design research). HubCore assigns in order, cycling: the
+// least-used colour wins, ties go to the earliest entry.
 export const COLORS = [
-  '#E5484D', '#F76B15', '#C79A00', '#30A46C', '#12A594', '#0091FF',
-  '#3E63DD', '#8E4EC6', '#D6409F', '#A18072', '#6E56CF', '#00A2C7',
+  '#C2410C', '#0E7490', '#7C3AED', '#B4236B', '#15803D', '#1D4ED8', '#A16207', '#BE123C',
 ];
 
 /* ------------------------------------------------------------------ */
@@ -153,7 +153,7 @@ export class WireReader {
 /* HubCore - the chat room                                             */
 /* ------------------------------------------------------------------ */
 
-const CTRL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F  ]/g;
+const CTRL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u2028\u2029]/g;
 
 export function sanitizeName(raw) {
   if (typeof raw !== 'string') return '';
