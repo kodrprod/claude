@@ -1,0 +1,8 @@
+{
+  "name": "lan-chat",
+  "private": true,
+  "type": "module",
+  "description": "Root package marker so public/*.js (shared by browser and server) are treated as ES modules by Node. No dependencies.",
+  "scripts": { "start": "node server/server.js" },
+  "engines": { "node": ">=18" }
+}

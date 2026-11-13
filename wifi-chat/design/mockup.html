@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>LAN Chat Mockup</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #F5F2EC; --surface: #FFFFFF; --surface-2: #ECE8E0; --border: #DAD4C8;
+  --text: #1C2024; --text-muted: #5A6068; --accent: #0B6E75; --on-accent: #FFFFFF; --accent-soft: #D5ECEC;
+  --success: #1F7A45; --warning: #8A5A00; --danger: #B3261E;
+  --success-soft: #DDF0E4; --warning-soft: #F8EBCF; --danger-soft: #F9DEDC;
+  --focus: #0B6E75; --scrim: rgb(20 22 26 / .45);
+  --shadow-sheet: 0 8px 24px rgb(0 0 0 / .18); --shadow-pop: 0 4px 14px rgb(0 0 0 / .14);
+  --u1: #C2410C; --u2: #0E7490; --u3: #7C3AED; --u4: #B4236B; --u5: #15803D; --u6: #1D4ED8; --u7: #A16207; --u8: #BE123C;
+  --font: ui-rounded, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --fs-xs: .75rem; --fs-sm: .875rem; --fs-md: 1rem; --fs-msg: 1.0625rem; --fs-lg: 1.25rem; --fs-xl: 1.75rem;
+  --lh-body: 1.4; --lh-head: 1.2; --fw-regular: 400; --fw-semi: 600; --fw-bold: 700;
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
+  --gap-in-group: 2px; --gap-between-groups: 12px; --gutter: 16px;
+  --r-bubble: 18px; --r-bubble-tight: 6px; --r-card: 12px; --r-sheet: 20px; --r-pill: 999px;
+  --dur-fast: 120ms; --dur: 180ms; --dur-sheet: 250ms; --ease: cubic-bezier(.2,.7,.2,1);
+  --z-pill: 20; --z-banner: 30; --z-header: 40; --z-sheet: 60; --z-toast: 80;
+  --sidebar-w: 280px; --col-max: 760px; --card-max: 480px; --bubble-max: min(34rem, 78%);
+  --tap: 44px; --tap-primary: 52px;
+  --sat: env(safe-area-inset-top); --sar: env(safe-area-inset-right); --sab: env(safe-area-inset-bottom); --sal: env(safe-area-inset-left);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151A; --surface: #1B2027; --surface-2: #262C35; --border: #333A45; --text: #E8EBEF; --text-muted: #A3ABB6;
+    --accent: #2BB5BD; --on-accent: #06191B; --accent-soft: #17383B;
+    --success: #5CCB8A; --warning: #F0B35A; --danger: #FF8A80;
+    --success-soft: #1A3326; --warning-soft: #3A2D12; --danger-soft: #3F1F1D;
+    --focus: #7FD8DE; --scrim: rgb(0 0 0 / .6);
+    --shadow-sheet: 0 8px 24px rgb(0 0 0 / .5); --shadow-pop: 0 4px 14px rgb(0 0 0 / .45);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151A; --surface: #1B2027; --surface-2: #262C35; --border: #333A45; --text: #E8EBEF; --text-muted: #A3ABB6;
+  --accent: #2BB5BD; --on-accent: #06191B; --accent-soft: #17383B;
+  --success: #5CCB8A; --warning: #F0B35A; --danger: #FF8A80;
+  --success-soft: #1A3326; --warning-soft: #3A2D12; --danger-soft: #3F1F1D;
+  --focus: #7FD8DE; --scrim: rgb(0 0 0 / .6);
+  --shadow-sheet: 0 8px 24px rgb(0 0 0 / .5); --shadow-pop: 0 4px 14px rgb(0 0 0 / .45);
+}
+@media (min-width: 600px) { :root { --gutter: 20px; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); font-size: var(--fs-md); line-height: var(--lh-body); -webkit-tap-highlight-color: transparent; }
+button, input, textarea { font: inherit; color: inherit; }
+button { touch-action: manipulation; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg.i { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- mockup chrome (not part of the app) ---------- */
+.mk-bar { position: sticky; top: 0; z-index: 100; background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.mk-bar h1 { margin: 0; font-size: var(--fs-md); font-weight: 700; }
+.mk-tabs { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.mk-tab { min-height: 36px; padding: 0 12px; border-radius: var(--r-pill); border: 1px solid var(--border); background: transparent; font-size: var(--fs-sm); font-weight: 600; color: var(--text-muted); }
+.mk-tab[aria-selected="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.mk-toggle { min-height: 36px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--border); background: var(--surface-2); font-size: var(--fs-sm); font-weight: 600; }
+.mk-stage { padding: 24px 16px 48px; }
+.mk-screen { display: none; }
+.mk-screen.on { display: block; }
+.mk-note { max-width: 900px; margin: 0 auto 18px; color: var(--text-muted); font-size: var(--fs-sm); text-align: center; }
+.mk-row { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; align-items: flex-start; }
+.mk-row > div { min-width: 0; max-width: 100%; }
+.mk-tabs { flex: 1 1 100%; overflow-x: auto; flex-wrap: nowrap; }
+@media (min-width: 1000px) { .mk-tabs { flex: 1; } }
+.mk-tab { white-space: nowrap; flex: none; }
+.mk-cap { text-align: center; font-size: var(--fs-xs); font-weight: 700; color: var(--text-muted); margin: 0 0 8px; letter-spacing: .02em; }
+.frame { margin: 0 auto; position: relative; container-type: inline-size; container-name: app; width: 390px; max-width: 100%; height: 780px; border: 1px solid var(--border); border-radius: 28px; overflow: hidden; background: var(--bg); box-shadow: var(--shadow-sheet); }
+.frame.ipad { width: 1024px; height: 700px; }
+.frame.card { width: 430px; height: 720px; }
+.frame.short { height: 560px; }
+.frame.tall { height: 900px; }
+
+/* ---------- app ---------- */
+.app { height: 100%; display: grid; grid-template-rows: auto auto 1fr auto; grid-template-columns: 1fr; position: relative; background: var(--bg); }
+.header { grid-row: 1; display: flex; align-items: center; gap: var(--s3); min-height: 56px; padding: max(8px, var(--sat)) max(var(--gutter), var(--sar)) 8px max(var(--gutter), var(--sal)); background: var(--surface); border-bottom: 1px solid var(--border); position: relative; z-index: var(--z-header); }
+.h-title { flex: 1; min-width: 0; }
+.h-title h2 { margin: 0; font-size: var(--fs-lg); line-height: var(--lh-head); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status { display: flex; align-items: center; gap: 6px; font-size: var(--fs-sm); color: var(--text-muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex: none; }
+.dot.warn { background: var(--warning); animation: pulse 1.2s ease-in-out infinite; }
+.dot.bad { background: var(--danger); }
+@keyframes pulse { 50% { opacity: .35; } }
+.people-btn { min-height: var(--tap); display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-radius: var(--r-pill); border: 1px solid var(--border); background: var(--surface-2); font-size: var(--fs-sm); font-weight: 600; }
+.facepile { display: flex; }
+.facepile .av { margin-left: -8px; border: 2px solid var(--surface-2); }
+.facepile .av:first-child { margin-left: 0; }
+.icon-btn { width: var(--tap); height: var(--tap); display: grid; place-items: center; border-radius: var(--r-pill); border: 0; background: transparent; color: var(--accent); }
+.av { --user: var(--u2); width: 32px; height: 32px; border-radius: 50%; background: var(--user); color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 700; flex: none; line-height: 1; }
+.av.sm { width: 24px; height: 24px; font-size: 10px; }
+.av.lg { width: 40px; height: 40px; font-size: 15px; }
+
+.banner { grid-row: 2; display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 8px max(var(--gutter), var(--sar)) 8px max(var(--gutter), var(--sal)); font-size: var(--fs-sm); font-weight: 600; z-index: var(--z-banner); }
+.banner.warn { background: var(--warning-soft); color: var(--warning); }
+.banner.bad { background: var(--danger-soft); color: var(--danger); }
+.banner.info { background: var(--accent-soft); color: var(--accent); }
+.banner .grow { flex: 1; }
+.spin { width: 16px; height: 16px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.messages { min-height: 0; grid-row: 3; overflow-y: auto; overscroll-behavior-y: contain; padding: var(--s4) 0 var(--s2); position: relative; }
+.log { list-style: none; margin: 0 auto; padding: 0 max(var(--gutter), var(--sar)) 0 max(var(--gutter), var(--sal)); max-width: calc(var(--col-max) + 2 * var(--gutter)); }
+.grp { display: flex; gap: 8px; margin-top: var(--gap-between-groups); }
+.grp:first-child { margin-top: 0; }
+.grp.own { justify-content: flex-end; }
+.stack { display: flex; flex-direction: column; gap: var(--gap-in-group); min-width: 0; max-width: var(--bubble-max); }
+.grp.own .stack { align-items: flex-end; }
+.grp .av, .grp .av-gap { margin-top: 20px; }
+.av-gap { width: 32px; flex: none; }
+.who { font-size: var(--fs-sm); font-weight: 600; margin: 0 0 2px 4px; color: var(--text); color: color-mix(in oklab, var(--user) 55%, var(--text)); }
+.bubble { padding: 8px 14px; font-size: var(--fs-msg); line-height: 1.4; border-radius: var(--r-bubble); background: var(--surface-2); color: var(--text); white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; width: fit-content; max-width: 100%; animation: appear var(--dur) var(--ease) both; }
+@keyframes appear { from { opacity: 0; transform: translateY(6px); } }
+.own .bubble { background: var(--accent); color: var(--on-accent); }
+.grp:not(.own) .b-first { border-bottom-left-radius: var(--r-bubble-tight); }
+.grp:not(.own) .b-mid { border-top-left-radius: var(--r-bubble-tight); border-bottom-left-radius: var(--r-bubble-tight); }
+.grp:not(.own) .b-last { border-top-left-radius: var(--r-bubble-tight); }
+.grp.own .b-first { border-bottom-right-radius: var(--r-bubble-tight); }
+.grp.own .b-mid { border-top-right-radius: var(--r-bubble-tight); border-bottom-right-radius: var(--r-bubble-tight); }
+.grp.own .b-last { border-top-right-radius: var(--r-bubble-tight); }
+.bubble.pending { opacity: .6; }
+.bubble.failed { outline: 1px solid var(--danger); outline-offset: -1px; }
+time { font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; margin: 2px 4px 0; }
+.fail-line { display: flex; gap: 6px; align-items: center; color: var(--danger); font-size: var(--fs-sm); font-weight: 600; margin: 4px 4px 0; min-height: 28px; background: none; border: 0; padding: 0; }
+.fail-line .i { width: 16px; height: 16px; }
+.divider { display: flex; align-items: center; gap: 12px; margin: var(--s4) 0 var(--s3); font-size: var(--fs-xs); font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.sys { text-align: center; font-size: var(--fs-sm); color: var(--text-muted); margin: var(--s3) 0; }
+.typing { grid-row: 3; align-self: end; height: 24px; display: flex; align-items: center; gap: 8px; padding: 0 max(var(--gutter), var(--sar)) 0 max(var(--gutter), var(--sal)); font-size: var(--fs-sm); color: var(--text-muted); pointer-events: none; }
+.typing .dots { display: flex; gap: 3px; }
+.typing .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); animation: bounce 1s infinite; }
+.typing .dots i:nth-child(2) { animation-delay: .15s; } .typing .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 30% { transform: translateY(-4px); } 60% { transform: none; } }
+.main { grid-row: 3; position: relative; min-height: 0; display: grid; grid-template-rows: 1fr 24px; }
+.main .messages { grid-row: 1; }
+.main .typing { grid-row: 2; align-self: auto; }
+.pill-new { position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); z-index: var(--z-pill); min-height: 40px; padding: 0 16px; border-radius: var(--r-pill); border: 0; background: var(--accent); color: var(--on-accent); font-size: var(--fs-sm); font-weight: 600; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow-pop); }
+
+.composer { grid-row: 4; background: var(--surface); border-top: 1px solid var(--border); padding: 8px max(12px, var(--sar)) max(8px, var(--sab)) max(12px, var(--sal)); }
+.counter { text-align: right; font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; margin: 0 8px 4px; }
+.counter.over { color: var(--danger); font-weight: 700; }
+.pillbox { display: flex; align-items: flex-end; gap: 4px; background: var(--surface-2); border: 2px solid var(--border); border-radius: 24px; padding: 3px; max-width: var(--col-max); margin: 0 auto; }
+.pillbox.focus { border-color: var(--accent); }
+.pillbox textarea { flex: 1; min-width: 0; border: 0; background: transparent; resize: none; font-size: var(--fs-msg); line-height: 1.4; padding: 9px 12px; max-height: 9rem; outline: none; color: var(--text); font-family: inherit; }
+.pillbox textarea::placeholder { color: var(--text-muted); opacity: 1; }
+.send { width: var(--tap); height: var(--tap); border-radius: 50%; border: 0; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; flex: none; }
+.send[disabled] { background: var(--border); color: var(--text-muted); cursor: default; }
+.send:active:not([disabled]) { transform: scale(.94); }
+
+/* wide layout via container width (real app: media query on the app root) */
+.sidebar { display: none; }
+@container app (min-width: 900px) {
+  .app { grid-template-columns: var(--sidebar-w) 1fr; }
+  .sidebar { display: flex; grid-column: 1; grid-row: 1 / -1; }
+  .app > :not(.sidebar):not(.sheet-wrap) { grid-column: 2; }
+  .people-btn { display: none; }
+  .av { width: 36px; height: 36px; font-size: 14px; }
+  .av.sm { width: 24px; height: 24px; font-size: 10px; } .av.lg { width: 40px; height: 40px; }
+  .av-gap { width: 36px; }
+}
+.sidebar { flex-direction: column; background: var(--surface); border-right: 1px solid var(--border); padding: max(0px, var(--sat)) 0 0 var(--sal); min-height: 0; }
+.sb-head { padding: 18px 16px 8px; font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted); }
+.plist { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; }
+.prow { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px; }
+.prow .nm { flex: 1; min-width: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip { font-size: var(--fs-xs); font-weight: 700; padding: 3px 8px; border-radius: var(--r-pill); }
+.chip.host { background: var(--accent-soft); color: var(--accent); }
+.chip.you { border: 1px solid var(--border); color: var(--text-muted); }
+.sb-foot { padding: 12px 16px max(12px, var(--sab)); border-top: 1px solid var(--border); display: grid; gap: 8px; }
+.sb-brand { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 700; }
+.sb-brand .logo { width: 28px; height: 28px; }
+
+/* ---------- buttons, fields ---------- */
+.btn { min-height: var(--tap); padding: 0 20px; border-radius: var(--r-card); border: 1px solid transparent; font-size: var(--fs-md); font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+.btn.primary { min-height: var(--tap-primary); background: var(--accent); color: var(--on-accent); }
+.btn.secondary { background: var(--surface); border-color: var(--border); color: var(--text); }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.danger { background: transparent; color: var(--danger); }
+.btn.block { width: 100%; }
+.btn:active:not([disabled]) { filter: brightness(.94); transform: scale(.985); }
+.btn[disabled] { opacity: .45; cursor: default; }
+@media (hover: hover) { .btn.secondary:hover { background: var(--surface-2); } .btn.primary:hover { filter: brightness(1.06); } .mk-tab:hover { border-color: var(--accent); } }
+.field { display: grid; gap: 6px; }
+.field label { font-size: var(--fs-sm); font-weight: 600; }
+.input { width: 100%; height: var(--tap-primary); padding: 0 14px; border-radius: var(--r-card); border: 1px solid var(--border); background: var(--surface); font-size: 1rem; outline: none; }
+.input:focus, .input.focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--focus) 35%, transparent); }
+.input.err { border-color: var(--danger); }
+textarea.input { height: auto; padding: 12px 14px; font-family: var(--mono); font-size: 1rem; line-height: 1.4; word-break: break-all; resize: none; }
+.help { font-size: var(--fs-sm); color: var(--text-muted); margin: 0; }
+.msg { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-sm); font-weight: 600; margin: 0; }
+.msg .i { width: 18px; height: 18px; margin-top: 1px; }
+.msg.err { color: var(--danger); } .msg.ok { color: var(--success); }
+.errbox { display: flex; gap: 10px; align-items: flex-start; background: var(--danger-soft); color: var(--danger); border-radius: var(--r-card); padding: 12px; font-size: var(--fs-sm); font-weight: 600; }
+.errbox .i { margin-top: 1px; width: 18px; height: 18px; }
+.errbox .btn { margin-top: 4px; min-height: 40px; padding: 0 12px; color: var(--danger); border: 1px solid currentColor; }
+
+/* ---------- pages (start / name / pairing) ---------- */
+.page { grid-row: 1 / -1; overflow-y: auto; padding: max(24px, calc(var(--sat) + 16px)) max(var(--gutter), var(--sar)) max(24px, var(--sab)) max(var(--gutter), var(--sal)); display: flex; flex-direction: column; align-items: center; }
+.app:has(> .page) { grid-template-rows: 1fr; }
+.card { width: 100%; max-width: var(--card-max); display: grid; gap: var(--s4); }
+.brand { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; margin: 12px 0 12px; }
+.brand .logo { width: 64px; height: 64px; }
+.brand h1 { margin: 0; font-size: var(--fs-xl); line-height: var(--lh-head); letter-spacing: -.01em; }
+.brand p { margin: 0; color: var(--text-muted); max-width: 30ch; }
+.choice { display: flex; align-items: center; gap: 16px; min-height: 92px; padding: 16px; text-align: left; width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+.choice .ico { width: 52px; height: 52px; border-radius: 14px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; }
+.choice .ico .i { width: 26px; height: 26px; }
+.choice.alt .ico { background: var(--surface-2); color: var(--text); }
+.choice b { display: block; font-size: var(--fs-md); font-weight: 700; }
+.choice span.d { display: block; font-size: var(--fs-sm); color: var(--text-muted); }
+.choice .chev { margin-left: auto; color: var(--text-muted); }
+@media (hover: hover) { .choice:hover { border-color: var(--accent); } }
+.choice:active { background: var(--surface-2); }
+details.how { font-size: var(--fs-sm); color: var(--text-muted); }
+details.how summary { min-height: var(--tap); display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--accent); font-weight: 600; list-style: none; justify-content: center; }
+details.how summary::-webkit-details-marker { display: none; }
+details.how > div { padding: 0 8px 8px; }
+details.how code { font-family: var(--mono); background: var(--surface-2); padding: 2px 6px; border-radius: 6px; color: var(--text); font-size: .85em; }
+.foot-note { text-align: center; font-size: var(--fs-sm); color: var(--text-muted); margin: 8px 0 0; }
+.stepper { display: grid; gap: 8px; }
+.stepper .n { font-size: var(--fs-sm); font-weight: 700; color: var(--accent); }
+.stepper h2 { margin: 0; font-size: var(--fs-lg); line-height: var(--lh-head); }
+.stepper ol { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.stepper li { height: 6px; border-radius: var(--r-pill); background: var(--border); }
+.stepper li.done, .stepper li[aria-current] { background: var(--accent); }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: grid; gap: 14px; }
+.codebox { position: relative; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-card); padding: 12px; }
+.codebox code { display: block; font-family: var(--mono); font-size: .8125rem; line-height: 1.5; word-break: break-all; max-height: 4.5em; overflow: hidden; -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); user-select: all; }
+.codebox.open code { max-height: none; -webkit-mask-image: none; mask-image: none; }
+.code-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.code-meta .sz { font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.actions { display: flex; gap: 8px; }
+.actions .btn.primary { flex: 1; }
+.qr-wrap { display: grid; justify-items: center; gap: 8px; }
+.qr { width: 220px; height: 220px; background: #fff; padding: 16px; border-radius: var(--r-card); border: 1px solid var(--border); }
+.qr svg { display: block; width: 100%; height: 100%; }
+.or { text-align: center; font-size: var(--fs-sm); color: var(--text-muted); margin: 0; }
+.waiting { display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; color: var(--text-muted); font-size: var(--fs-sm); min-height: 44px; }
+.stack-btns { display: grid; gap: 8px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.success-panel { text-align: center; justify-items: center; padding: 24px 16px; }
+.success-panel .tick { width: 56px; height: 56px; border-radius: 50%; background: var(--success-soft); color: var(--success); display: grid; place-items: center; }
+.success-panel .tick .i { width: 30px; height: 30px; }
+.success-panel h3 { margin: 0; font-size: var(--fs-lg); }
+.success-panel p { margin: 0; color: var(--text-muted); }
+
+/* empty state */
+.empty { grid-row: 3; display: grid; place-content: center; justify-items: center; text-align: center; gap: 10px; padding: 24px; }
+.empty .ico { width: 64px; height: 64px; border-radius: 20px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.empty .ico .i { width: 30px; height: 30px; }
+.empty h3 { margin: 4px 0 0; font-size: var(--fs-lg); }
+.empty p { margin: 0; color: var(--text-muted); max-width: 28ch; }
+.addr { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card); padding: 6px 6px 6px 12px; font-family: var(--mono); font-size: .8125rem; margin-top: 6px; max-width: 100%; }
+.addr span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.addr .btn { min-height: 36px; padding: 0 12px; font-size: var(--fs-sm); }
+
+/* sheet */
+.scrim { position: absolute; inset: 0; background: var(--scrim); z-index: calc(var(--z-sheet) - 1); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: var(--z-sheet); background: var(--surface); border-radius: var(--r-sheet) var(--r-sheet) 0 0; box-shadow: var(--shadow-sheet); padding: 8px 0 max(12px, var(--sab)); max-height: 80%; display: flex; flex-direction: column; animation: sheetup var(--dur-sheet) var(--ease) both; }
+@keyframes sheetup { from { transform: translateY(40px); opacity: 0; } }
+.sheet .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--border); margin: 4px auto 6px; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px 4px 16px; }
+.sheet-head h3 { margin: 0; font-size: var(--fs-lg); }
+
+/* toasts */
+.toast { position: absolute; left: 50%; transform: translateX(-50%); bottom: 84px; max-width: min(360px, 90%); background: var(--text); color: var(--bg); border-radius: var(--r-card); padding: 12px 16px; font-size: var(--fs-sm); font-weight: 600; display: flex; gap: 10px; align-items: center; box-shadow: var(--shadow-pop); z-index: var(--z-toast); animation: sheetup var(--dur) var(--ease) both; white-space: nowrap; }
+.toast.static { position: static; transform: none; animation: none; }
+
+/* kit */
+.kit { max-width: 980px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.kit section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px; display: grid; gap: 12px; align-content: start; }
+.kit h3 { margin: 0; font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted); }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+.sw { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-size: var(--fs-xs); }
+.sw i { display: block; height: 36px; }
+.sw span { display: block; padding: 4px 6px; font-family: var(--mono); color: var(--text-muted); line-height: 1.3; }
+.pal { display: flex; gap: 8px; flex-wrap: wrap; }
+.type div { margin: 2px 0; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20"/><circle cx="10" cy="8" r="3.5"/><path d="M20 20v-1.4a3.5 3.5 0 0 0-2.5-3.35M15.5 4.7a3.5 3.5 0 0 1 0 6.6"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16v.01"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7"/><path d="M6 9.5V19a1 1 0 0 0 1 1h3.5v-5h3v5H17a1 1 0 0 0 1-1V9.5"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-clip" viewBox="0 0 24 24"><rect x="6" y="5" width="12" height="16" rx="2.5"/><path d="M9 5.5V4h6v1.5M9.5 11h5M9.5 15h5"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-3.9A8 8 0 1 1 20 12z"/></symbol>
+    <symbol id="i-retry" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5"/></symbol>
+    <symbol id="logo" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0B6E75"/><path d="M14 40c0-8 6-14 14-14h9c7 0 13 5 13 12s-6 12-13 12H26l-9 5 1.5-8.5C15.5 44.5 14 42.5 14 40z" fill="#fff"/><circle cx="26" cy="38" r="2.6" fill="#0B6E75"/><circle cx="34" cy="38" r="2.6" fill="#0B6E75"/><circle cx="42" cy="38" r="2.6" fill="#0B6E75"/></symbol>
+  </defs>
+</svg>
+
+<div class="mk-bar">
+  <h1>LAN Chat · Harbor mockup</h1>
+  <div class="mk-tabs" role="tablist" aria-label="Screens" id="tabs"></div>
+  <button class="mk-toggle" id="theme" type="button">Theme: auto</button>
+</div>
+
+<main class="mk-stage">
+
+<!-- 1 START -->
+<section class="mk-screen" id="s-start" data-title="1 Start">
+  <p class="mk-note">Start screen (browser-host mode, opened without the Node server). Phone, and iPad portrait width.</p>
+  <div class="mk-row">
+    <div><p class="mk-cap">PHONE 390</p>
+      <div class="frame"><div class="app"><div class="page">
+        <div class="card">
+          <div class="brand"><svg class="logo"><use href="#logo"/></svg><h1>LAN Chat</h1><p>Chat with people on the same WiFi. No internet or accounts needed.</p></div>
+          <button class="choice" type="button"><span class="ico"><svg class="i"><use href="#i-home"/></svg></span><span><b>Host a chat on this device</b><span class="d">This device becomes the room. Others connect to you.</span></span><svg class="i chev"><use href="#i-chev"/></svg></button>
+          <button class="choice alt" type="button"><span class="ico"><svg class="i"><use href="#i-link"/></svg></span><span><b>Join a chat</b><span class="d">Someone is already hosting. You will paste their invite.</span></span><svg class="i chev"><use href="#i-chev"/></svg></button>
+          <details class="how"><summary>Have a computer? Run server mode</summary><div>Run <code>node server/server.js</code> on any computer on your WiFi, then open the address it prints on every device. Guests just type their name.</div></details>
+          <p class="foot-note">Works on the same WiFi only.</p>
+        </div></div></div></div></div>
+    <div><p class="mk-cap">TABLET PORTRAIT 744</p>
+      <div class="frame" style="width:744px;height:780px"><div class="app"><div class="page">
+        <div class="card" style="margin-top:40px">
+          <div class="brand"><svg class="logo"><use href="#logo"/></svg><h1>LAN Chat</h1><p>Chat with people on the same WiFi. No internet or accounts needed.</p></div>
+          <button class="choice" type="button"><span class="ico"><svg class="i"><use href="#i-home"/></svg></span><span><b>Host a chat on this device</b><span class="d">This device becomes the room. Others connect to you.</span></span><svg class="i chev"><use href="#i-chev"/></svg></button>
+          <button class="choice alt" type="button"><span class="ico"><svg class="i"><use href="#i-link"/></svg></span><span><b>Join a chat</b><span class="d">Someone is already hosting. You will paste their invite.</span></span><svg class="i chev"><use href="#i-chev"/></svg></button>
+          <details class="how" open><summary>Have a computer? Run server mode</summary><div>Run <code>node server/server.js</code> on any computer on your WiFi, then open the address it prints on every device. Guests just type their name.</div></details>
+          <p class="foot-note">Works on the same WiFi only.</p>
+        </div></div></div></div></div>
+  </div>
+</section>
+
+<!-- 2 NAME -->
+<section class="mk-screen" id="s-name" data-title="2 Name">
+  <p class="mk-note">Server-mode name screen (room name comes from the server), and the returning-visit variant.</p>
+  <div class="mk-row">
+    <div><p class="mk-cap">FIRST VISIT</p><div class="frame card"><div class="app"><div class="page"><div class="card" style="margin-top:56px">
+      <div class="brand"><svg class="logo"><use href="#logo"/></svg><h1>Cedar Street Chat</h1><p>3 online</p></div>
+      <div class="panel">
+        <div class="field"><label for="n1">Your name</label><input class="input focus" id="n1" value="Dana" maxlength="24" autocomplete="nickname"><p class="help">Up to 24 characters.</p></div>
+        <button class="btn primary block" type="button">Join chat</button>
+      </div></div></div></div></div></div>
+    <div><p class="mk-cap">NAME MISSING</p><div class="frame card"><div class="app"><div class="page"><div class="card" style="margin-top:56px">
+      <div class="brand"><svg class="logo"><use href="#logo"/></svg><h1>Cedar Street Chat</h1><p>3 online</p></div>
+      <div class="panel">
+        <div class="field"><label for="n2">Your name</label><input class="input err" id="n2" placeholder="e.g. Sam" aria-invalid="true"><p class="msg err" role="alert"><svg class="i"><use href="#i-alert"/></svg>Pick a name, up to 24 characters.</p></div>
+        <button class="btn primary block" type="button" disabled>Join chat</button>
+      </div></div></div></div></div></div>
+    <div><p class="mk-cap">RETURNING VISIT</p><div class="frame card"><div class="app"><div class="page"><div class="card" style="margin-top:56px">
+      <div class="brand"><svg class="logo"><use href="#logo"/></svg><h1>Cedar Street Chat</h1><p>3 online</p></div>
+      <div class="panel">
+        <button class="btn primary block" type="button">Continue as Dana</button>
+        <button class="btn ghost block" type="button">Change name</button>
+      </div></div></div></div></div></div>
+  </div>
+</section>
+
+<!-- 3 HOST -->
+<section class="mk-screen" id="s-host" data-title="3 Host pairing">
+  <p class="mk-note">Host pairing: invite, then paste reply, then connected. Plain words only. Code box is collapsed; QR is white in both themes.</p>
+  <div class="mk-row">
+    <div><p class="mk-cap">STEP 1 · PREPARING</p><div class="frame card"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 1 of 2</span><h2>Send this invite to your guest</h2><ol aria-label="Progress"><li aria-current="step"></li><li></li></ol></div>
+      <div class="panel"><div class="waiting"><span class="spin"></span>Preparing invite…</div><button class="btn primary block" disabled type="button"><span class="spin"></span>Preparing invite…</button></div>
+      <button class="btn ghost block" type="button">Cancel</button>
+    </div></div></div></div></div>
+    <div><p class="mk-cap">STEP 1 · READY</p><div class="frame card tall"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 1 of 2</span><h2>Send this invite to your guest</h2><ol><li aria-current="step"></li><li></li></ol></div>
+      <div class="panel">
+        <div class="qr-wrap"><div class="qr" id="qr1"></div><p class="or">Or send as text</p></div>
+        <div class="codebox" data-code><code>LC1.eJyVVNtu2zAM_RXDz2sTx7nZeRvQbQOGbUC7B6WzLLiSKJWi7C7I_eyfMNNLqBt2HeRLYQ4PzzmkL5-vQKS9KNP0KPSS7K0v0xEQfjAxvkcaQYhqJ6YCk-ccUNh7sFYKZB2aWgILQw2iBDRoEe24ZQNJgPEWT4pANQCI8TKnDnQYgQP</code><div class="code-meta" style="margin-top:8px"><span class="sz">1.2 KB</span></div></div>
+        <button class="btn ghost block" type="button" data-toggle>Show full code</button>
+        <div class="actions"><button class="btn primary" type="button" data-copy><svg class="i"><use href="#i-copy"/></svg><span>Copy invite</span></button><button class="btn secondary" type="button"><svg class="i"><use href="#i-share"/></svg>Share…</button></div>
+        <p class="help" style="text-align:center">Valid for about 5 minutes. Created 40 s ago.</p>
+      </div>
+      <button class="btn primary block" type="button">Next: I have their reply</button>
+      <details class="how"><summary>How does this work?</summary><div>Send this invite to the other person (message, AirDrop or QR). They open LAN Chat, choose Join a chat and paste it. They send you a reply code back. Everyone must be on the same WiFi. No internet needed.</div></details>
+      <button class="btn ghost block" type="button">Cancel</button>
+    </div></div></div></div></div>
+    <div><p class="mk-cap">STEP 2 · PASTE REPLY</p><div class="frame card"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 2 of 2</span><h2>Paste their reply</h2><ol><li class="done"></li><li aria-current="step"></li></ol></div>
+      <div class="panel">
+        <div class="field"><label for="r1">Reply code</label><textarea class="input focus" id="r1" rows="4" autocapitalize="off" autocorrect="off" spellcheck="false">LC1.eJxVkM1uwjAQhF9lz5wWJ+QPbpUi9QCqUA89VGgdG2IpsStvQFSId2-gCkLHme8bW1d4Lw5Q2zjmcQLzUZMQu</textarea>
+        <p class="msg ok"><svg class="i"><use href="#i-check"/></svg>Looks like a valid code</p>
+        <button class="btn secondary block" type="button"><svg class="i"><use href="#i-clip"/></svg>Paste from clipboard</button></div>
+      <button class="btn primary block" type="button">Connect</button>
+      <button class="btn ghost block" type="button">Back</button>
+    </div></div></div></div></div>
+  </div>
+  <div class="mk-row" style="margin-top:28px">
+    <div><p class="mk-cap">STEP 2 · CONNECTING</p><div class="frame card short"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 2 of 2</span><h2>Paste their reply</h2><ol><li class="done"></li><li aria-current="step"></li></ol></div>
+      <div class="panel"><div class="waiting"><span class="spin"></span>Connecting…</div></div>
+      <button class="btn ghost block" type="button">Cancel</button>
+    </div></div></div></div></div>
+    <div><p class="mk-cap">CONNECTED</p><div class="frame card short"><div class="app"><div class="page"><div class="card">
+      <div class="panel success-panel"><span class="tick"><svg class="i"><use href="#i-check"/></svg></span><h3>Priya is connected.</h3><p>They can see the chat now.</p></div>
+      <button class="btn primary block" type="button">Back to chat</button>
+      <button class="btn secondary block" type="button"><svg class="i"><use href="#i-plus"/></svg>Add another person</button>
+    </div></div></div></div></div>
+    <div><p class="mk-cap">ERROR · BAD REPLY</p><div class="frame card short"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 2 of 2</span><h2>Paste their reply</h2><ol><li class="done"></li><li aria-current="step"></li></ol></div>
+      <div class="panel"><div class="field"><label for="r2">Reply code</label><textarea class="input err" id="r2" rows="3" aria-invalid="true">LC1.eJxVkM1uw</textarea></div>
+        <div class="errbox" role="alert"><svg class="i"><use href="#i-alert"/></svg><div>That code does not look right. Make sure you copied all of it.</div></div></div>
+      <button class="btn primary block" type="button" disabled>Connect</button>
+    </div></div></div></div></div>
+  </div>
+</section>
+
+<!-- 4 GUEST -->
+<section class="mk-screen" id="s-guest" data-title="4 Guest pairing">
+  <p class="mk-note">Guest pairing: paste invite, send reply, wait. Includes failure states.</p>
+  <div class="mk-row">
+    <div><p class="mk-cap">STEP 1 · PASTE INVITE</p><div class="frame card"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 1 of 2</span><h2>Paste the invite</h2><ol><li aria-current="step"></li><li></li></ol></div>
+      <div class="panel">
+        <div class="field"><label for="g1">Invite code</label><textarea class="input focus" id="g1" rows="4" autocapitalize="off" autocorrect="off" spellcheck="false">LC1.eJyVVNtu2zAM_RXDz2sTx7nZeRvQbQOGbUC7B6WzLLiSKJWi7C7I_eyfMNNLqBt2HeRLYQ4PzzmkL5-vQKS9KNP0KPSS7K0v0</textarea>
+          <p class="msg ok"><svg class="i"><use href="#i-check"/></svg>Looks like a valid code</p></div>
+        <button class="btn secondary block" type="button"><svg class="i"><use href="#i-clip"/></svg>Paste from clipboard</button>
+        <div class="field"><label for="g1n">Your name</label><input class="input" id="g1n" value="Priya"></div>
+      </div>
+      <button class="btn primary block" type="button">Continue</button>
+      <button class="btn ghost block" type="button">Cancel</button>
+    </div></div></div></div></div>
+    <div><p class="mk-cap">STEP 2 · SEND REPLY, WAITING</p><div class="frame card tall"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 2 of 2</span><h2>Send your reply to Maya</h2><ol><li class="done"></li><li aria-current="step"></li></ol></div>
+      <div class="panel">
+        <div class="qr-wrap"><div class="qr" id="qr2"></div><p class="or">Or send as text</p></div>
+        <div class="codebox"><code>LC1.eJxVkM1uwjAQhF9lz5wWJ+QPbpUi9QCqUA89VGgdG2IpsStvQFSId2-gCkLHme8bW1d4Lw5Q2zjmcQLzUZMQu</code></div>
+        <div class="actions"><button class="btn primary" type="button"><svg class="i"><use href="#i-copy"/></svg>Copy reply</button><button class="btn secondary" type="button"><svg class="i"><use href="#i-share"/></svg>Share…</button></div>
+        <div class="waiting"><span class="dot warn"></span>Waiting for the host to accept…</div>
+      </div>
+      <button class="btn ghost block" type="button">Cancel</button>
+    </div></div></div></div></div>
+    <div><p class="mk-cap">ERROR · COULD NOT CONNECT</p><div class="frame card"><div class="app"><div class="page"><div class="card">
+      <div class="stepper"><span class="n">Step 2 of 2</span><h2>Send your reply to Maya</h2><ol><li class="done"></li><li aria-current="step"></li></ol></div>
+      <div class="errbox" role="alert"><svg class="i"><use href="#i-alert"/></svg><div>Could not connect. Are you both on the same WiFi?<br><button class="btn" type="button"><svg class="i"><use href="#i-retry"/></svg>Try again</button></div></div>
+      <div class="errbox" role="alert"><svg class="i"><use href="#i-alert"/></svg><div>This invite has expired. Ask for a new one.</div></div>
+      <div class="errbox" role="alert"><svg class="i"><use href="#i-alert"/></svg><div>This invite was already used. Ask for a new one.</div></div>
+      <p class="help" style="text-align:center">Your name is kept, so trying again is quick.</p>
+    </div></div></div></div></div>
+  </div>
+</section>
+
+<!-- 5 CHAT -->
+<section class="mk-screen" id="s-chat" data-title="5 Chat">
+  <p class="mk-note">Chat: phone portrait (390) and iPad landscape (1024, sidebar shows at 900+ container width). Both are live responsive layouts. Colored avatars carry identity; names use a darkened mix of the user color.</p>
+  <div class="mk-row">
+    <div><p class="mk-cap">PHONE PORTRAIT</p>
+      <div class="frame" data-chat></div></div>
+    <div><p class="mk-cap">IPAD LANDSCAPE · SIDEBAR</p>
+      <div class="frame ipad" data-chat="ipad"></div></div>
+  </div>
+</section>
+
+<!-- 6 EMPTY / PEOPLE / BANNERS -->
+<section class="mk-screen" id="s-states" data-title="6 States">
+  <p class="mk-note">Empty room (host and server variants), people sheet, reconnecting and offline banners, new-messages pill, failed message, host ended.</p>
+  <div class="mk-row">
+    <div><p class="mk-cap">EMPTY · HOST</p><div class="frame"><div class="app">
+      <header class="header"><div class="h-title"><h2>Dana's chat</h2><div class="status"><span class="dot"></span>Hosting · 1 connected</div></div><button class="icon-btn" aria-label="Add person"><svg class="i"><use href="#i-plus"/></svg></button></header>
+      <div class="banner info" style="grid-row:2"><span class="grow">You are hosting. If you close this tab or lock the screen, the chat ends for everyone.</span><svg class="i"><use href="#i-x"/></svg></div>
+      <div class="empty"><span class="ico"><svg class="i"><use href="#i-chat"/></svg></span><h3>You're the first one here</h3><p>Say hello, or invite someone to join.</p><button class="btn primary" type="button"><svg class="i"><use href="#i-plus"/></svg>Add a person</button></div>
+      <div class="composer"><div class="pillbox"><textarea rows="1" placeholder="Message" aria-label="Message"></textarea><button class="send" disabled aria-label="Send"><svg class="i"><use href="#i-send"/></svg></button></div></div>
+    </div></div></div>
+    <div><p class="mk-cap">EMPTY · SERVER MODE</p><div class="frame"><div class="app">
+      <header class="header"><div class="h-title"><h2>Cedar Street Chat</h2><div class="status"><span class="dot"></span>Connected</div></div><button class="people-btn"><span class="facepile"><span class="av sm" style="--user:var(--u5)">D</span></span>1 online</button></header>
+      <div class="empty"><span class="ico"><svg class="i"><use href="#i-chat"/></svg></span><h3>You're the first one here</h3><p>Say hello, or invite someone to join.</p><div class="addr"><span>http://192.168.1.23:8080</span><button class="btn secondary" type="button"><svg class="i"><use href="#i-copy"/></svg>Copy</button></div></div>
+      <div class="composer"><div class="pillbox focus"><textarea rows="1" placeholder="Message" aria-label="Message"></textarea><button class="send" disabled aria-label="Send"><svg class="i"><use href="#i-send"/></svg></button></div></div>
+    </div></div></div>
+    <div><p class="mk-cap">PEOPLE SHEET</p><div class="frame" data-chat="sheet"></div></div>
+  </div>
+  <div class="mk-row" style="margin-top:28px">
+    <div><p class="mk-cap">RECONNECTING + NEW MESSAGES PILL</p><div class="frame" data-chat="reconnecting"></div></div>
+    <div><p class="mk-cap">OFFLINE + FAILED MESSAGE + OVER LIMIT</p><div class="frame" data-chat="offline"></div></div>
+    <div><p class="mk-cap">HOST ENDED THE CHAT</p><div class="frame short"><div class="app"><div class="page"><div class="card" style="margin-top:80px">
+      <div class="panel success-panel"><span class="tick" style="background:var(--surface-2);color:var(--text-muted)"><svg class="i"><use href="#i-home"/></svg></span><h3>The host ended the chat.</h3><p>Your messages are still on this screen until you leave.</p></div>
+      <button class="btn primary block" type="button">Back to start</button></div></div></div></div></div>
+  </div>
+</section>
+
+<!-- 7 KIT -->
+<section class="mk-screen" id="s-kit" data-title="7 Kit">
+  <p class="mk-note">Tokens and small components. Contrast pairs are listed in design-system.md.</p>
+  <div class="kit">
+    <section><h3>COLOR TOKENS</h3><div class="swatches" id="sw"></div></section>
+    <section><h3>USER PALETTE (white initials)</h3><div class="pal">
+      <span class="av lg" style="--user:var(--u1)">AB</span><span class="av lg" style="--user:var(--u2)">CD</span><span class="av lg" style="--user:var(--u3)">EF</span><span class="av lg" style="--user:var(--u4)">GH</span><span class="av lg" style="--user:var(--u5)">IJ</span><span class="av lg" style="--user:var(--u6)">KL</span><span class="av lg" style="--user:var(--u7)">MN</span><span class="av lg" style="--user:var(--u8)">OP</span></div>
+      <h3>AVATAR SIZES</h3><div class="pal" style="align-items:center"><span class="av sm">AB</span><span class="av">AB</span><span class="av lg">AB</span></div></section>
+    <section><h3>BUTTONS</h3>
+      <button class="btn primary block" type="button">Primary 52</button>
+      <div class="row2"><button class="btn secondary" type="button">Secondary 44</button><button class="btn ghost" type="button">Ghost 44</button></div>
+      <div class="row2"><button class="btn primary" disabled type="button">Disabled</button><button class="btn primary" type="button"><span class="spin"></span>Preparing…</button></div>
+      <button class="btn danger block" type="button">End chat for everyone</button></section>
+    <section><h3>TEXT FIELD</h3>
+      <div class="field"><label>Default</label><input class="input" placeholder="e.g. Sam"></div>
+      <div class="field"><label>Focus</label><input class="input focus" value="Dana"></div>
+      <div class="field"><label>Error</label><input class="input err" value=""><p class="msg err"><svg class="i"><use href="#i-alert"/></svg>Pick a name, up to 24 characters.</p></div></section>
+    <section><h3>CHIPS, STATUS, TOASTS</h3>
+      <div class="pal"><span class="chip host">Host</span><span class="chip you">You</span></div>
+      <div class="status"><span class="dot"></span>Connected</div><div class="status"><span class="dot warn"></span>Reconnecting…</div><div class="status"><span class="dot bad"></span>Offline</div>
+      <div class="toast static"><svg class="i"><use href="#i-check"/></svg>Priya joined</div>
+      <div class="toast static"><svg class="i"><use href="#i-alert"/></svg>Message not sent. Messages can be up to 2000 characters.</div></section>
+    <section class="type"><h3>TYPE SCALE</h3>
+      <div style="font-size:var(--fs-xl);font-weight:700">28 Start title</div><div style="font-size:var(--fs-lg);font-weight:700">20 Screen title</div><div style="font-size:var(--fs-msg)">17 Message text</div><div>16 UI text and inputs</div><div style="font-size:var(--fs-sm);color:var(--text-muted)">14 Captions, names</div><div style="font-size:var(--fs-xs);color:var(--text-muted)">12 Time, badges, counter</div></section>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  /* ---- tabs ---- */
+  var tabs = document.getElementById('tabs'), screens = [].slice.call(document.querySelectorAll('.mk-screen'));
+  screens.forEach(function (s, i) {
+    var b = document.createElement('button');
+    b.className = 'mk-tab'; b.type = 'button'; b.setAttribute('role', 'tab'); b.textContent = s.dataset.title; b.dataset.id = s.id;
+    b.addEventListener('click', function () { show(s.id); });
+    tabs.appendChild(b);
+  });
+  function show(id) {
+    if (!document.getElementById(id)) id = screens[0].id;
+    screens.forEach(function (s) { s.classList.toggle('on', s.id === id); });
+    [].forEach.call(tabs.children, function (b) { b.setAttribute('aria-selected', b.dataset.id === id ? 'true' : 'false'); });
+    try { history.replaceState(null, '', '#' + id.slice(2)); } catch (e) {}
+  }
+  show('s-' + (location.hash.slice(1) || 'start'));
+
+  /* ---- theme toggle: auto -> light -> dark ---- */
+  var modes = ['auto', 'light', 'dark'], mi = 0, tb = document.getElementById('theme');
+  function applyTheme() {
+    if (modes[mi] === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', modes[mi]);
+    tb.textContent = 'Theme: ' + modes[mi];
+  }
+  tb.addEventListener('click', function () { mi = (mi + 1) % 3; applyTheme(); });
+  var m = /theme=(light|dark)/.exec(location.search); if (m) { mi = modes.indexOf(m[1]); applyTheme(); }
+
+  /* ---- small demos: copy label, code toggle ---- */
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-copy]');
+    if (c) { var sp = c.querySelector('span'), old = sp.textContent; sp.textContent = 'Copied'; setTimeout(function () { sp.textContent = old; }, 2000); }
+    var t = e.target.closest('[data-toggle]');
+    if (t) { var box = t.parentNode.querySelector('.codebox'); box.classList.toggle('open'); t.textContent = box.classList.contains('open') ? 'Hide code' : 'Show full code'; }
+  });
+
+  /* ---- fake QR (decorative) ---- */
+  function qr(el) {
+    var n = 29, s = 7, out = '<svg viewBox="0 0 ' + n + ' ' + n + '" shape-rendering="crispEdges"><rect width="' + n + '" height="' + n + '" fill="#fff"/>', seed = 7;
+    function r() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    function finder(x, y) { out += '<rect x="' + x + '" y="' + y + '" width="7" height="7" fill="#000"/><rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" fill="#fff"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3" fill="#000"/>'; }
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+      if ((x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9)) continue;
+      if (r() > .52) out += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="#000"/>';
+    }
+    finder(0, 0); finder(n - 7, 0); finder(0, n - 7);
+    el.innerHTML = out + '</svg>';
+  }
+  [].forEach.call(document.querySelectorAll('.qr'), qr);
+
+  function sb(){ [].forEach.call(document.querySelectorAll('.messages'), function (m) { m.scrollTop = m.scrollHeight; }); }
+  document.addEventListener('click', function (e) { if (e.target.closest('.mk-tab')) setTimeout(sb, 0); });
+  window.addEventListener('load', function () { sb(); });
+  /* ---- swatches ---- */
+  var names = ['bg','surface','surface-2','border','text','text-muted','accent','on-accent','accent-soft','success','warning','danger'];
+  var sw = document.getElementById('sw'), cs = getComputedStyle(document.documentElement);
+  names.forEach(function (n) { var d = document.createElement('div'); d.className = 'sw'; d.innerHTML = '<i style="background:var(--' + n + ')"></i><span>--' + n + '</span>'; sw.appendChild(d); });
+
+  /* ---- chat template ---- */
+  var U = { maya: 'var(--u2)', theo: 'var(--u1)', priya: 'var(--u3)', dana: 'var(--u5)' };
+  function av(n, c) { return '<span class="av" style="--user:' + c + '" aria-hidden="true">' + n[0] + '</span>'; }
+  function grp(name, color, msgs, time, own) {
+    var h = '<li class="grp' + (own ? ' own' : '') + '" style="--user:' + color + '">';
+    if (!own) h += av(name, color);
+    h += '<div class="stack">';
+    if (!own) h += '<p class="who">' + name + '</p>';
+    msgs.forEach(function (t, i) {
+      var pos = msgs.length === 1 ? '' : i === 0 ? 'b-first' : i === msgs.length - 1 ? 'b-last' : 'b-mid';
+      var extra = '';
+      if (typeof t === 'object') { extra = ' ' + t.cls; t = t.text; }
+      h += '<div class="bubble ' + pos + extra + '" dir="auto">' + t + '</div>';
+      if (extra.indexOf('failed') > -1) h += '<button class="fail-line" type="button"><svg class="i"><use href="#i-alert"/></svg>Not sent. Tap to try again.</button>';
+    });
+    if (time) h += '<time>' + time + '</time>';
+    return h + '</div></li>';
+  }
+  var LOG =
+    '<li class="divider">Today 14:05</li>' +
+    '<li class="sys">Maya joined</li>' +
+    grp('Maya', U.maya, ['Hey all, can everyone see this?', 'Hosting from the iPad in the kitchen'], '14:05') +
+    grp('Theo', U.theo, ['Loud and clear 👋', 'No internet needed, nice', 'Is the pasta still on for 7?'], '14:06') +
+    grp('Dana', U.dana, ['Yes! I can bring bread', 'Priya, are you in?'], '14:07', true) +
+    '<li class="sys">Priya joined</li>' +
+    grp('Priya', U.priya, ['In! Just joined from my phone', 'Count me in for dessert'], '14:09') +
+    grp('Dana', U.dana, ['Perfect. See you at 7.'], '14:10', true);
+  function people(me) {
+    var P = [['Dana','var(--u5)','you'],['Maya','var(--u2)','host'],['Priya','var(--u3)',''],['Theo','var(--u1)','']], h = '';
+    P.forEach(function (p) { h += '<li class="prow">' + '<span class="av lg" style="--user:' + p[1] + '">' + p[0][0] + '</span><span class="nm">' + p[0] + '</span>' + (p[2] === 'host' ? '<span class="chip host">Host</span>' : '') + (p[2] === 'you' ? '<span class="chip you">You</span>' : '') + '</li>'; });
+    return h;
+  }
+  var HEAD = function (st, dotc) { return '<header class="header"><div class="h-title"><h2>Cedar Street Chat</h2><div class="status"><span class="dot ' + (dotc || '') + '"></span>' + st + '</div></div>' +
+    '<button class="people-btn" type="button" aria-label="4 people online"><span class="facepile"><span class="av sm" style="--user:var(--u5)">D</span><span class="av sm" style="--user:var(--u2)">M</span><span class="av sm" style="--user:var(--u3)">P</span></span>4 online</button></header>'; };
+  var SIDE = '<aside class="sidebar" aria-label="People"><div class="sb-brand"><svg class="logo"><use href="#logo"/></svg>LAN Chat</div><div class="sb-head">People · 4</div><ul class="plist">' + people() + '</ul><div class="sb-foot"><button class="btn secondary block" type="button"><svg class="i"><use href="#i-plus"/></svg>Add another person</button></div></aside>';
+  function composer(o) {
+    o = o || {};
+    return '<form class="composer" onsubmit="return false">' + (o.counter ? '<div class="counter ' + (o.over ? 'over' : '') + '">' + o.counter + '</div>' : '') +
+      '<div class="pillbox ' + (o.focus ? 'focus' : '') + '"><label class="sr" for="c' + (o.id || 0) + '">Message</label><textarea id="c' + (o.id || 0) + '" rows="' + (o.rows || 1) + '" placeholder="' + (o.ph || 'Message') + '" enterkeyhint="send">' + (o.val || '') + '</textarea>' +
+      '<button class="send" type="button" aria-label="Send"' + (o.dis ? ' disabled' : '') + '><svg class="i"><use href="#i-send"/></svg></button></div></form>';
+  }
+  var TYPING = '<div class="typing" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span>Theo is typing</div>';
+  function main(log, typing, extra) { return '<main class="main"><div class="messages"><ol class="log" role="log" aria-label="Messages">' + log + '</ol></div>' + (typing || '<div class="typing"></div>') + (extra || '') + '</main>'; }
+
+  var variants = {
+    '': function () { return HEAD('Connected') + '<div></div>' + main(LOG, TYPING) + composer({ focus: false, id: 1 }) + SIDE; },
+    ipad: function () { return HEAD('Connected') + '<div></div>' + main(LOG, TYPING) + composer({ focus: true, id: 2, val: 'Anyone want to', rows: 1 }) + SIDE; },
+    sheet: function () {
+      return HEAD('Connected') + '<div></div>' + main(LOG, '') + composer({ id: 3 }) +
+        '<div class="scrim"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pt"><div class="grab"></div><div class="sheet-head"><h3 id="pt">People · 4</h3><button class="icon-btn" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div><ul class="plist">' + people() + '</ul><div class="sb-foot" style="border:0"><button class="btn secondary block" type="button"><svg class="i"><use href="#i-plus"/></svg>Add another person</button></div></div>';
+    },
+    reconnecting: function () {
+      return HEAD('Reconnecting…', 'warn') + '<div class="banner warn" role="status"><span class="spin"></span><span class="grow">Reconnecting… You can keep typing; sending resumes when you are back.</span></div>' +
+        main(LOG, '', '<button class="pill-new" type="button"><svg class="i"><use href="#i-down"/></svg>2 new messages</button>') + composer({ id: 4, ph: 'Waiting to reconnect…', dis: true });
+    },
+    offline: function () {
+      var L = LOG.replace(/<li class="grp own"[^]*$/, '') + grp('Dana', U.dana, [{ cls: 'failed', text: 'Perfect. See you at 7.' }], '', true);
+      return HEAD('Offline', 'bad') + '<div class="banner bad" role="status"><svg class="i"><use href="#i-alert"/></svg><span class="grow">You are offline. Trying again every few seconds.</span><button class="btn ghost" style="min-height:36px;padding:0 8px;color:var(--danger)" type="button">Retry now</button></div>' +
+        main(L, '') + composer({ id: 5, counter: '2,014 / 2000 · Message is too long', over: true, rows: 3, val: 'A very long message that keeps going…', dis: true });
+    }
+  };
+  [].forEach.call(document.querySelectorAll('[data-chat]'), function (f) {
+    var k = f.dataset.chat; f.innerHTML = '<div class="app">' + variants[k]() + '</div>';
+    var ml = f.querySelector('.messages'); if (ml) { ml.scrollTop = ml.scrollHeight; }
+  });
+})();
+</script>
+</body>
+</html>

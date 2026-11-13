@@ -1,0 +1,15 @@
+{
+  "name": "LAN Chat",
+  "short_name": "LAN Chat",
+  "description": "Chat with people on the same WiFi. No internet or accounts needed.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F5F2EC",
+  "theme_color": "#0B6E75",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
