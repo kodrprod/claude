@@ -8,6 +8,11 @@ added to the Home Screen. No accounts, and no internet needed for the chat itsel
 
 ### 1. Browser-host mode (works from an iPad, nothing to install)
 
+Open **https://kodrprod.github.io/claude/** (published by
+`.github/workflows/lan-chat-pages.yml`; one-time setup: repo Settings → Pages → Source:
+"GitHub Actions"). The first load needs internet. After that the app is cached and the
+chat itself runs over WiFi only. Tip: Share → Add to Home Screen.
+
 The host is just a browser tab. Guests pair with it once by swapping two codes.
 
 1. Open the app on the host device and tap **Host a chat on this device**.
